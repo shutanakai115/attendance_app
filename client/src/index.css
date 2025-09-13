@@ -48,7 +48,7 @@
 
   --popover-border: 0 0% 88%;
 
-  --primary: 216 100% 50%;
+  --primary: 220 15% 35%;
 
   --primary-foreground: 0 0% 98%;
 
@@ -70,11 +70,18 @@
 
   --input: 0 0% 80%;
   --ring: 216 100% 50%;
-  --chart-1: 120 60% 45%;
-  --chart-2: 35 90% 55%;
-  --chart-3: 216 100% 50%;
+  --chart-1: 145 25% 40%;
+  --chart-2: 25 30% 50%;
+  --chart-3: 220 15% 35%;
   --chart-4: 280 80% 55%;
-  --chart-5: 0 70% 50%;
+  --chart-5: 5 25% 45%;
+
+  /* Custom color definitions for time tracking app */
+  --clock-in: 145 25% 40%;
+  --clock-out: 5 25% 45%;
+  --break-start: 25 30% 50%;
+  --break-end: 220 15% 35%;
+  --not-started: 220 10% 70%;
 
   --font-sans: Open Sans, sans-serif;
   --font-serif: Georgia, serif;
@@ -166,7 +173,7 @@
 
   --popover-border: 0 0% 26%;
 
-  --primary: 216 100% 60%;
+  --primary: 220 20% 70%;
 
   --primary-foreground: 0 0% 8%;
 
@@ -188,11 +195,18 @@
 
   --input: 0 0% 30%;
   --ring: 216 100% 60%;
-  --chart-1: 120 50% 55%;
-  --chart-2: 35 80% 65%;
-  --chart-3: 216 100% 60%;
+  --chart-1: 145 20% 65%;
+  --chart-2: 25 25% 70%;
+  --chart-3: 220 20% 70%;
   --chart-4: 280 70% 65%;
-  --chart-5: 0 60% 60%;
+  --chart-5: 5 20% 65%;
+
+  /* Custom color definitions for time tracking app - Dark mode */
+  --clock-in: 145 20% 65%;
+  --clock-out: 5 20% 65%;
+  --break-start: 25 25% 70%;
+  --break-end: 220 20% 70%;
+  --not-started: 220 8% 50%;
 
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
@@ -324,5 +338,36 @@
   .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
   .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
     inset: -1px;
+  }
+
+  /* Custom utility classes for time tracking buttons */
+  .bg-clock-in {
+    background-color: hsl(var(--clock-in));
+  }
+  .bg-clock-out {
+    background-color: hsl(var(--clock-out));
+  }
+  .bg-break-start {
+    background-color: hsl(var(--break-start));
+  }
+  .bg-break-end {
+    background-color: hsl(var(--break-end));
+  }
+  .bg-not-started {
+    background-color: hsl(var(--not-started));
+  }
+  
+  /* Hover states */
+  .bg-clock-in\/90:hover {
+    background-color: hsl(var(--clock-in) / 0.9);
+  }
+  .bg-clock-out\/90:hover {
+    background-color: hsl(var(--clock-out) / 0.9);
+  }
+  .bg-break-start\/90:hover {
+    background-color: hsl(var(--break-start) / 0.9);
+  }
+  .bg-break-end\/90:hover {
+    background-color: hsl(var(--break-end) / 0.9);
   }
 }

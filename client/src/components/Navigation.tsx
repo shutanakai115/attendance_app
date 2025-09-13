@@ -23,9 +23,9 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-border px-4 py-2 z-50">
-      <div className="max-w-md mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+    <div className="fixed bottom-0 left-0 right-0 lg:top-0 lg:bottom-auto bg-background border-t lg:border-t-0 lg:border-b border-border px-4 py-2 z-50">
+      <div className="max-w-md mx-auto lg:max-w-6xl flex items-center justify-between">
+        <div className="flex items-center space-x-2 lg:space-x-4">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
@@ -36,11 +36,11 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
                 variant={isActive ? "default" : "ghost"}
                 size="sm"
                 onClick={() => onPageChange(item.id)}
-                className={`flex flex-col items-center gap-1 h-12 w-16 ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
+                className={`flex flex-col lg:flex-row items-center gap-1 lg:gap-2 h-12 w-16 lg:w-auto lg:px-4 ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
                 data-testid={`nav-${item.id}`}
               >
                 <Icon className="w-4 h-4" />
-                <span className="text-xs">{item.label}</span>
+                <span className="text-xs lg:text-sm">{item.label}</span>
               </Button>
             );
           })}

@@ -1,92 +1,104 @@
-# Design Guidelines for 副業エンジニア向け出退勤記録WebアプリMVP
+# Updated Design Guidelines for 副業エンジニア向け出退勤記録WebアプリMVP
 
-## Design Approach: Utility-Focused Design System
-**Selected Framework:** Material Design 3 with mobile-first optimization
-**Rationale:** This is a productivity tool requiring immediate recognition, clear affordances, and reliable interaction patterns. Efficiency and learnability are paramount over visual flair.
+## Design Approach: Modern Material Design 3 System
+**Selected Framework:** Material Design 3 with refined color science and responsive desktop optimization
+**Rationale:** Maintains utility-focused efficiency while elevating professional appearance through sophisticated color harmonies and expanded device support.
 
 ## Core Design Principles
-1. **One-Handed Mobile Operation:** All interactive elements sized for thumb reach
-2. **Instant Visual Feedback:** Immediate state changes with clear color coding
-3. **Minimal Cognitive Load:** Single-purpose screens with clear hierarchies
-4. **Accessibility First:** High contrast, large touch targets (44px minimum)
+1. **Multi-Device Harmony:** Seamless experience from mobile thumb operation to desktop precision
+2. **Sophisticated Simplicity:** Refined aesthetics without sacrificing functional clarity
+3. **Professional Confidence:** Subdued elegance appropriate for workplace tools
+4. **Adaptive Intelligence:** Responsive layouts that enhance rather than compromise mobile-first design
 
 ## Color Palette
 
 ### Light Mode
-- **Primary:** 216 100% 50% (vibrant blue for trust/reliability)
-- **Success/Clock-in:** 120 60% 45% (professional green)
-- **Warning/Break:** 35 90% 55% (warm orange)
-- **Error/Clock-out:** 0 70% 50% (clear red)
-- **Surface:** 0 0% 98% (clean background)
-- **On-Surface:** 0 0% 20% (readable text)
+- **Primary:** 220 15% 35% (sophisticated steel blue - professional yet approachable)
+- **Success/Clock-in:** 145 25% 40% (muted sage green - calm reliability)
+- **Warning/Break:** 25 30% 50% (warm taupe - gentle attention)
+- **Error/Clock-out:** 5 25% 45% (subdued terracotta - serious but not alarming)
+- **Surface:** 0 0% 98% (pristine background)
+- **Surface-Variant:** 220 8% 94% (subtle container differentiation)
+- **On-Surface:** 0 0% 15% (comfortable reading contrast)
+- **Outline:** 220 10% 80% (soft structural elements)
 
 ### Dark Mode
-- **Primary:** 216 100% 60%
-- **Success:** 120 50% 55%
-- **Warning:** 35 80% 65%
-- **Error:** 0 60% 60%
-- **Surface:** 0 0% 8%
-- **On-Surface:** 0 0% 90%
+- **Primary:** 220 20% 70% (lifted steel blue maintaining sophistication)
+- **Success:** 145 20% 65% (gentle sage maintaining recognition)
+- **Warning:** 25 25% 70% (softened warm tone)
+- **Error:** 5 20% 65% (muted but clear indication)
+- **Surface:** 220 8% 6% (rich dark foundation)
+- **Surface-Variant:** 220 12% 10% (elevated containers)
+- **On-Surface:** 0 0% 90% (comfortable light text)
+- **Outline:** 220 8% 25% (subtle dark mode borders)
 
 ## Typography
-- **Primary Font:** Inter (via Google Fonts CDN)
+- **Primary Font:** Inter (Google Fonts CDN)
 - **Hierarchy:**
-  - Large buttons: font-bold text-lg (18px)
-  - Status indicators: font-semibold text-base (16px)
-  - Time displays: font-mono text-2xl (24px)
-  - Earnings: font-bold text-3xl (30px)
-  - Body text: font-normal text-sm (14px)
+  - Large actions: font-semibold text-lg (refined from bold)
+  - Status text: font-medium text-base (professional weight)
+  - Time displays: font-mono text-2xl (maintains precision)
+  - Earnings: font-semibold text-3xl (sophisticated emphasis)
+  - Body text: font-normal text-sm (comfortable reading)
 
 ## Layout System
-**Spacing Units:** Tailwind 4, 6, 8, 12 (16px, 24px, 32px, 48px)
-- **Container:** max-w-md mx-auto (mobile-optimized)
-- **Button spacing:** p-6 for large touch targets
-- **Section gaps:** space-y-8 for clear separation
-- **Card padding:** p-6 for comfortable content spacing
+**Spacing Units:** Tailwind 3, 4, 6, 8, 12 (12px, 16px, 24px, 32px, 48px)
+**Responsive Containers:**
+- Mobile: max-w-md mx-auto (original mobile optimization)
+- Tablet: max-w-2xl mx-auto px-6
+- Desktop: max-w-4xl mx-auto px-8 with sidebar navigation option
 
 ## Component Library
 
 ### Primary Action Buttons
-- **Size:** Full width, 64px height minimum
-- **States:** Clock-in (green), Break Start (orange), Break End (blue), Clock-out (red)
-- **Typography:** Bold, 18px, white text
-- **Interaction:** Subtle scale animation on press
+- **Mobile:** Full width, 56px height (refined from 64px)
+- **Desktop:** Fixed width 280px, centered or left-aligned in cards
+- **States:** Sophisticated color applications with 8px border-radius
+- **Typography:** Medium weight (refined from bold), refined color contrast
+- **Interaction:** Subtle 2px shadow lift on hover (desktop), gentle scale on mobile
 
-### Status Display
-- **Container:** Rounded card with colored border matching current state
-- **Content:** Large status text + time since last action
-- **Colors:** Gray (未出勤), Green (出勤中), Orange (休憩中), Red (退勤済み)
+### Status Display Cards
+- **Design:** Elevated cards with 1px subtle borders in outline color
+- **Mobile:** Full width with 6px border-left accent in status color
+- **Desktop:** Grid layout with 4px border-top accent
+- **Typography:** Status text in primary color, time in on-surface
+- **Background:** Surface-variant for subtle elevation
 
-### Time & Earnings Display
-- **Time:** Monospace font, large size, prominent positioning
-- **Earnings:** Bold typography, emphasized with larger font size
-- **Update frequency:** Real-time (every minute)
+### Time & Earnings Dashboard
+- **Layout:** Card-based containers with subtle shadows
+- **Mobile:** Stacked vertical cards
+- **Desktop:** Side-by-side grid with consistent heights
+- **Typography:** Monospace time in refined sizing, earnings with sophisticated primary color
 
 ### Navigation
-- **Bottom Tab Bar:** Fixed position with 3-4 main sections
-- **Icons:** Material Icons via CDN
-- **Active states:** Filled icons with primary color
+- **Mobile:** Bottom tab bar with rounded corners and surface-variant background
+- **Desktop:** Top navigation bar or optional sidebar
+- **Icons:** Material Icons via CDN with outline color for inactive states
+- **Active states:** Primary color fill with subtle background highlight
 
 ### Data Tables
-- **History View:** Clean rows with alternating backgrounds
-- **Export Button:** Secondary style, top-right positioning
-- **Responsive:** Horizontal scroll on mobile for detailed data
+- **Desktop Enhancement:** Full-featured tables with column sorting
+- **Mobile:** Maintained horizontal scroll with improved typography
+- **Row styling:** Alternating surface and surface-variant backgrounds
+- **Headers:** Medium weight typography in primary color
+
+## Responsive Enhancements
+- **Breakpoints:** Mobile-first with sm: (640px), md: (768px), lg: (1024px) considerations
+- **Desktop Advantages:** Larger touch targets become precision hover targets
+- **Multi-column layouts:** Sidebar information panels on larger screens
+- **Enhanced data visualization:** Charts and graphs viable on desktop widths
+
+## Professional Refinements
+- **Reduced visual intensity:** Sophisticated colors reduce eye strain during extended use
+- **Improved hierarchy:** Subtle color variations create clearer information architecture
+- **Enterprise readiness:** Color palette appropriate for corporate environments
+- **Brand flexibility:** Neutral foundation allows easy customization while maintaining sophistication
 
 ## Animations
-**Minimal approach:** Only essential feedback animations
-- Button press: subtle scale (0.95) with 150ms transition
-- Status changes: fade transition between states
-- Loading states: simple spinner, no complex animations
+**Refined approach:** Subtle, purposeful motion
+- Button interactions: 2px shadow transitions (desktop), gentle 0.98 scale (mobile)
+- Status changes: 200ms fade with slight scale for emphasis
+- Loading states: Elegant spinner in primary color with reduced opacity
+- Page transitions: Smooth 150ms fade between major sections
 
-## Mobile Optimization
-- **Touch targets:** 44px minimum for all interactive elements
-- **Thumb zones:** Primary actions in bottom 2/3 of screen
-- **One-handed operation:** All critical functions accessible with thumb
-- **PWA indicators:** Install prompt, offline status indicators
-
-## Error Handling
-- **Toast notifications:** Bottom-positioned, non-intrusive
-- **Error states:** Clear messaging with suggested actions
-- **Offline handling:** Graceful degradation with local storage sync
-
-This design prioritizes immediate usability and reliability over visual sophistication, ensuring engineers can quickly track time without friction while maintaining professional appearance.
+This evolution maintains the utility-focused foundation while introducing sophisticated visual refinement suitable for professional environments across all device types.

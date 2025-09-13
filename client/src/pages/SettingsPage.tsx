@@ -72,7 +72,7 @@ export default function SettingsPage() {
 
   if (isLoading || !settings) {
     return (
-      <div className="min-h-screen bg-background pb-20 px-4 flex items-center justify-center">
+      <div className="min-h-screen bg-background pb-20 px-4 lg:px-8 xl:px-12 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
           <p className="text-muted-foreground">読み込み中...</p>
@@ -82,8 +82,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20 px-4">
-      <div className="max-w-md mx-auto pt-6 space-y-6">
+    <div className="min-h-screen bg-background pb-20 px-4 lg:px-8 xl:px-12">
+      <div className="max-w-md mx-auto pt-6 space-y-6 lg:max-w-2xl lg:pt-8 xl:pt-12">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-foreground mb-2">
             設定

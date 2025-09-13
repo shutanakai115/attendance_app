@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Clock, Play, Pause, Square, Coffee } from "lucide-react";
+import { Clock, Play, Pause, Square } from "lucide-react";
 import { WorkStatus } from "@shared/schema";
 
 interface TimeRecorderProps {
@@ -64,7 +64,7 @@ export default function TimeRecorder({
   const minutes = currentSessionMinutes % 60;
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto lg:max-w-lg xl:max-w-xl">
       <CardHeader className="text-center pb-4">
         <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-white font-semibold ${statusInfo.bgClass}`}>
           <Clock className="w-5 h-5" />
@@ -85,7 +85,7 @@ export default function TimeRecorder({
           <p className="text-sm text-muted-foreground">本日の勤務時間</p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-3 lg:gap-4">
           <Button
             onClick={onClockIn}
             disabled={status !== 'not_started' && status !== 'finished'}
@@ -112,7 +112,7 @@ export default function TimeRecorder({
             className="h-16 bg-break-start hover:bg-break-start/90 text-white font-bold text-lg"
             data-testid="button-break-start"
           >
-            <Coffee className="w-6 h-6 mr-2" />
+            <Pause className="w-6 h-6 mr-2" />
             休憩開始
           </Button>
 
@@ -122,7 +122,7 @@ export default function TimeRecorder({
             className="h-16 bg-break-end hover:bg-break-end/90 text-white font-bold text-lg"
             data-testid="button-break-end"
           >
-            <Pause className="w-6 h-6 mr-2" />
+            <Play className="w-6 h-6 mr-2" />
             休憩終了
           </Button>
         </div>
