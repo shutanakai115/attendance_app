@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,30 +9,17 @@ import HistoryPage from "@/pages/HistoryPage";
 import SettingsPage from "@/pages/SettingsPage";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'timer' | 'history' | 'settings'>('timer');
-
-  const renderCurrentPage = () => {
-    switch (currentPage) {
-      case 'timer':
-        return <TimerPage />;
-      case 'history':
-        return <HistoryPage />;
-      case 'settings':
-        return <SettingsPage />;
-      default:
-        return <TimerPage />;
-    }
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <div className="min-h-screen bg-background">
-          {renderCurrentPage()}
-          <Navigation 
-            currentPage={currentPage} 
-            onPageChange={setCurrentPage}
-          />
+          <Switch>
+            <Route path="/" component={TimerPage} />
+            <Route path="/history" component={HistoryPage} />
+            <Route path="/settings" component={SettingsPage} />
+            <Route component={TimerPage} /> {/* Default route */}
+          </Switch>
+          <Navigation />
         </div>
         <Toaster />
       </TooltipProvider>

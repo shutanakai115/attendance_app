@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Clock, History, Settings, Sun, Moon } from "lucide-react";
 import { useState } from "react";
+import { Link, useLocation } from "wouter";
 
-interface NavigationProps {
-  currentPage: 'timer' | 'history' | 'settings';
-  onPageChange: (page: 'timer' | 'history' | 'settings') => void;
-}
-
-export default function Navigation({ currentPage, onPageChange }: NavigationProps) {
+export default function Navigation() {
+  const [location] = useLocation();
   const [isDark, setIsDark] = useState(false);
 
   const toggleTheme = () => {
@@ -17,9 +14,9 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
   };
 
   const navItems = [
-    { id: 'timer' as const, label: 'タイマー', icon: Clock },
-    { id: 'history' as const, label: '履歴', icon: History },
-    { id: 'settings' as const, label: '設定', icon: Settings },
+    { id: 'timer' as const, label: 'タイマー', icon: Clock, path: '/' },
+    { id: 'history' as const, label: '履歴', icon: History, path: '/history' },
+    { id: 'settings' as const, label: '設定', icon: Settings, path: '/settings' },
   ];
 
   return (
@@ -28,20 +25,20 @@ export default function Navigation({ currentPage, onPageChange }: NavigationProp
         <div className="flex items-center space-x-2 lg:space-x-4">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = currentPage === item.id;
+            const isActive = location === item.path;
             
             return (
-              <Button
-                key={item.id}
-                variant={isActive ? "default" : "ghost"}
-                size="sm"
-                onClick={() => onPageChange(item.id)}
-                className={`flex flex-col lg:flex-row items-center gap-1 lg:gap-2 h-12 w-16 lg:w-auto lg:px-4 ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
-                data-testid={`nav-${item.id}`}
-              >
-                <Icon className="w-4 h-4" />
-                <span className="text-xs lg:text-sm">{item.label}</span>
-              </Button>
+              <Link key={item.id} href={item.path}>
+                <Button
+                  variant={isActive ? "default" : "ghost"}
+                  size="sm"
+                  className={`flex flex-col lg:flex-row items-center gap-1 lg:gap-2 h-12 w-16 lg:w-auto lg:px-4 ${isActive ? 'bg-primary text-primary-foreground' : ''}`}
+                  data-testid={`nav-${item.id}`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="text-xs lg:text-sm">{item.label}</span>
+                </Button>
+              </Link>
             );
           })}
         </div>
