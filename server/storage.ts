@@ -1,37 +1,91 @@
-import { type User, type InsertUser } from "@shared/schema";
+import { type WorkRecord, type Settings, type InsertWorkRecord, type InsertSettings } from "@shared/schema";
 import { randomUUID } from "crypto";
 
-// modify the interface with any CRUD methods
-// you might need
-
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  // Work Records
+  getWorkRecord(id: string): Promise<WorkRecord | undefined>;
+  getWorkRecordsByDate(date: string): Promise<WorkRecord[]>;
+  getAllWorkRecords(): Promise<WorkRecord[]>;
+  createWorkRecord(record: InsertWorkRecord): Promise<WorkRecord>;
+  updateWorkRecord(id: string, updates: Partial<WorkRecord>): Promise<WorkRecord>;
+  
+  // Settings
+  getSettings(): Promise<Settings>;
+  updateSettings(settings: Partial<InsertSettings>): Promise<Settings>;
 }
 
 export class MemStorage implements IStorage {
-  private users: Map<string, User>;
+  private workRecords: Map<string, WorkRecord>;
+  private settings: Settings;
 
   constructor() {
-    this.users = new Map();
+    this.workRecords = new Map();
+    this.settings = {
+      id: 'main',
+      hourlyRate: 3000,
+      overtimeRate: 3750,
+      targetHoursPerDay: 480, // 8 hours in minutes
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  // Work Records
+  async getWorkRecord(id: string): Promise<WorkRecord | undefined> {
+    return this.workRecords.get(id);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+  async getWorkRecordsByDate(date: string): Promise<WorkRecord[]> {
+    return Array.from(this.workRecords.values()).filter(
+      (record) => record.date === date,
     );
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
+  async getAllWorkRecords(): Promise<WorkRecord[]> {
+    return Array.from(this.workRecords.values()).sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
+
+  async createWorkRecord(insertRecord: InsertWorkRecord): Promise<WorkRecord> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+    const record: WorkRecord = {
+      ...insertRecord,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.workRecords.set(id, record);
+    return record;
+  }
+
+  async updateWorkRecord(id: string, updates: Partial<WorkRecord>): Promise<WorkRecord> {
+    const existing = this.workRecords.get(id);
+    if (!existing) {
+      throw new Error(`Work record not found: ${id}`);
+    }
+    
+    const updated: WorkRecord = {
+      ...existing,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    this.workRecords.set(id, updated);
+    return updated;
+  }
+
+  // Settings
+  async getSettings(): Promise<Settings> {
+    return this.settings;
+  }
+
+  async updateSettings(updates: Partial<InsertSettings>): Promise<Settings> {
+    this.settings = {
+      ...this.settings,
+      ...updates,
+      updatedAt: new Date(),
+    };
+    return this.settings;
   }
 }
 
