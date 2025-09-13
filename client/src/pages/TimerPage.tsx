@@ -1,63 +1,58 @@
-import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import TimeRecorder from '@/components/TimeRecorder';
 import EarningsDisplay from '@/components/EarningsDisplay';
 import StatsCards from '@/components/StatsCards';
-import { WorkStatus, WorkRecord, Settings } from '@shared/schema';
+import { useWorkTracker } from '@/hooks/useWorkTracker';
+import { calculateMonthlyStats } from '@/lib/timeCalculations';
+import { loadWorkRecords } from '@/lib/localStorage';
 
 export default function TimerPage() {
-  // todo: remove mock functionality
-  const [status, setStatus] = useState<WorkStatus>('not_started');
-  const [currentSessionMinutes, setCurrentSessionMinutes] = useState(0);
-  const [lastActionTime, setLastActionTime] = useState<Date>();
-  const [todayEarnings, setTodayEarnings] = useState(0);
-  const [monthlyEarnings, setMonthlyEarnings] = useState(187500);
+  const { 
+    currentRecord, 
+    isTimerRunning, 
+    settings, 
+    isLoading, 
+    actions 
+  } = useWorkTracker();
 
-  // Mock settings - todo: replace with real data
-  const settings: Settings = {
-    id: 'main',
-    hourlyRate: 3000,
-    overtimeRate: 3750,
-    targetHoursPerDay: 480,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (status === 'working') {
-        setCurrentSessionMinutes(prev => prev + 1);
-        setTodayEarnings(prev => prev + (settings.hourlyRate / 60));
+  // Get all records for monthly stats
+  const { data: allRecords = [] } = useQuery({
+    queryKey: ['/api/records'],
+    queryFn: async () => {
+      try {
+        const response = await fetch('/api/records');
+        if (response.ok) {
+          const records = await response.json();
+          // Convert date strings back to Date objects
+          return records.map((record: any) => ({
+            ...record,
+            clockIn: record.clockIn ? new Date(record.clockIn) : undefined,
+            clockOut: record.clockOut ? new Date(record.clockOut) : undefined,
+            breakStart: record.breakStart ? new Date(record.breakStart) : undefined,
+            breakEnd: record.breakEnd ? new Date(record.breakEnd) : undefined,
+            createdAt: new Date(record.createdAt),
+            updatedAt: new Date(record.updatedAt)
+          }));
+        }
+        throw new Error('API not available');
+      } catch {
+        return loadWorkRecords();
       }
-    }, 60000); // Update every minute
+    }
+  });
 
-    return () => clearInterval(interval);
-  }, [status, settings.hourlyRate]);
-
-  const handleClockIn = () => {
-    setStatus('working');
-    setLastActionTime(new Date());
-    setCurrentSessionMinutes(0);
-    console.log('Clocked in');
-  };
-
-  const handleBreakStart = () => {
-    setStatus('on_break');
-    setLastActionTime(new Date());
-    console.log('Break started');
-  };
-
-  const handleBreakEnd = () => {
-    setStatus('working');
-    setLastActionTime(new Date());
-    console.log('Break ended');
-  };
-
-  const handleClockOut = () => {
-    setStatus('finished');
-    setLastActionTime(new Date());
-    console.log('Clocked out');
-  };
+  const monthlyStats = calculateMonthlyStats(allRecords);
+  
+  if (isLoading || !currentRecord || !settings) {
+    return (
+      <div className="min-h-screen bg-background pb-20 px-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">読み込み中...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background pb-20 px-4">
@@ -72,28 +67,28 @@ export default function TimerPage() {
         </div>
 
         <TimeRecorder
-          status={status}
-          onClockIn={handleClockIn}
-          onBreakStart={handleBreakStart}
-          onBreakEnd={handleBreakEnd}
-          onClockOut={handleClockOut}
-          currentSessionMinutes={currentSessionMinutes}
-          lastActionTime={lastActionTime}
+          status={currentRecord.status}
+          onClockIn={actions.handleClockIn}
+          onBreakStart={actions.handleBreakStart}
+          onBreakEnd={actions.handleBreakEnd}
+          onClockOut={actions.handleClockOut}
+          currentSessionMinutes={currentRecord.totalWorkMinutes}
+          lastActionTime={currentRecord.updatedAt}
         />
 
         <EarningsDisplay
-          todayEarnings={todayEarnings}
-          monthlyEarnings={monthlyEarnings}
+          todayEarnings={currentRecord.earnings}
+          monthlyEarnings={monthlyStats.totalEarnings}
           monthlyTarget={250000}
           hourlyRate={settings.hourlyRate}
         />
 
         <StatsCards
-          weeklyHours={2400}
-          monthlyHours={9600}
-          avgDailyHours={8.2}
-          workingDays={20}
-          isOvertime={currentSessionMinutes > 480}
+          weeklyHours={monthlyStats.totalHours * 60} // Convert to minutes
+          monthlyHours={monthlyStats.totalHours * 60} // Convert to minutes  
+          avgDailyHours={monthlyStats.averageHoursPerDay}
+          workingDays={monthlyStats.workingDays}
+          isOvertime={currentRecord.totalWorkMinutes > settings.targetHoursPerDay}
         />
       </div>
     </div>

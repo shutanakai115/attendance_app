@@ -30,7 +30,8 @@ export default function TimeRecorder({
     
     const updateTime = () => {
       const now = new Date();
-      const diff = Math.floor((now.getTime() - lastActionTime.getTime()) / 1000 / 60);
+      const actionTime = new Date(lastActionTime); // Ensure it's a Date object
+      const diff = Math.floor((now.getTime() - actionTime.getTime()) / 1000 / 60);
       if (diff < 60) {
         setTimeSinceLastAction(`${diff}分前`);
       } else {
