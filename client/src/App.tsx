@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Navigation from "@/components/Navigation";
 import TimerPage from "@/pages/TimerPage";
 import HistoryPage from "@/pages/HistoryPage";
+import HistoryDetailPage from "@/pages/HistoryDetailPage";
 import SettingsPage from "@/pages/SettingsPage";
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Switch>
             <Route path="/" component={TimerPage} />
             <Route path="/history" component={HistoryPage} />
+            <Route path="/history/:id" component={HistoryDetailPage} />
             <Route path="/settings" component={SettingsPage} />
             <Route component={TimerPage} /> {/* Default route */}
           </Switch>
