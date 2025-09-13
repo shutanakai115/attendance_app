@@ -1,0 +1,121 @@
+Core Features to Include:
+UI/UX Features
+
+ワンタップ操作UI with large, accessible buttons:
+
+Clock-in button (green, large)
+Break start button (orange, medium)
+Break end button (blue, medium)
+Clock-out button (red, large)
+Smart button state management (disable inappropriate buttons based on current status)
+
+
+Real-time status display showing current state with clear visual indicators:
+
+出勤前 (gray) - only clock-in enabled
+出勤中 (green) - break start and clock-out enabled
+休憩中 (orange) - only break end enabled
+退勤済み (red) - only clock-in for next day enabled
+
+
+Mobile-first responsive design:
+
+Optimized for one-handed operation
+Large touch targets (minimum 44px)
+Clear visual hierarchy with color coding
+
+
+
+Data Management
+
+Persistent local storage using localStorage for MVP:
+
+Work records with timestamps
+User settings (hourly rate, preferences)
+Data structure prepared for future Turso migration
+Automatic data backup/recovery mechanisms
+
+
+Automatic time calculations:
+
+Real-time work hour tracking
+Break time deduction from total hours
+Overtime detection and highlighting
+
+
+
+Display Features
+
+Today's dashboard with real-time updates:
+
+Current work hours for today
+Current earnings for today
+Time since last action
+Status indicator
+
+
+Monthly summary prominently displayed:
+
+Total monthly work hours
+Monthly earnings calculation
+Progress towards monthly goals
+Motivational earnings display (large, prominent)
+
+
+Settings management:
+
+Hourly rate configuration
+Overtime rate settings
+Monthly target hours
+
+
+
+Data Export & History
+
+Work history display:
+
+Recent work records list
+Daily summaries with earnings
+Weekly/monthly aggregation views
+
+
+CSV export functionality:
+
+Export daily records
+Export monthly summaries
+Include all relevant fields (date, times, breaks, earnings)
+
+
+
+PWA & Performance
+
+Progressive Web App setup:
+
+Installable on mobile devices
+Offline functionality
+App-like experience
+Fast loading and responsive
+
+
+
+Technical Implementation
+
+State management:
+
+React hooks for local state
+localStorage for persistence
+Real-time updates without page refresh
+
+
+Error handling:
+
+Data validation
+Graceful error recovery
+User-friendly error messages
+
+
+Performance optimization:
+
+Efficient re-rendering
+Lazy loading where appropriate
+Smooth animations and transitions

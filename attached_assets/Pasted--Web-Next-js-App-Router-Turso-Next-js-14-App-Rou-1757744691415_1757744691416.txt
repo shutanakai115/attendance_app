@@ -1,0 +1,164 @@
+# 副業エンジニア向け出退勤記録WebアプリをNext.js App Router + Tursoで作成
+
+## 技術要件
+- **フレームワーク**: Next.js 14+ (App Router)、TypeScript
+- **データベース**: Turso (ローカルファースト SQLite + クラウド同期)
+- **スタイリング**: Tailwind CSS
+- **レスポンシブ**: スマホ優先設計
+- **PWA対応**: manifest.json、Service Worker
+- **ORM**: Drizzle ORM (Turso推奨)
+
+## Turso設定
+```bash
+npm install @libsql/client drizzle-orm drizzle-kit
+npm install -D @types/better-sqlite3
+```
+
+### 環境変数
+```env
+TURSO_DATABASE_URL=your_turso_db_url
+TURSO_AUTH_TOKEN=your_auth_token
+```
+
+## 機能要件
+
+### メイン機能
+1. **ワンタップ操作UI**
+   - 大きな出勤ボタン（緑色）
+   - 休憩開始ボタン（オレンジ色）
+   - 休憩終了ボタン（青色）
+   - 退勤ボタン（赤色）
+   - 現在の状態を明確に表示（出勤中、休憩中、退勤済み等）
+   - ボタンの状態に応じて有効/無効を切り替え
+
+2. **勤務記録管理（Turso）**
+   - 日付、出勤時刻、休憩時間、退勤時刻をローカルDBに即座に保存
+   - 実働時間の自動計算（休憩時間を除く）
+   - オフライン対応（ローカル書き込み→後でクラウド同期）
+   - 記録の履歴表示
+
+3. **集計・表示機能**
+   - 今月の総勤務時間を大きく表示
+   - 時給設定機能（設定画面）
+   - **今月の現在の収益を目立つように表示**（モチベーション向上）
+   - 今日の勤務時間
+   - 今週の勤務時間
+   - 日別の勤務時間一覧
+
+4. **データ出力**
+   - CSV出力機能（日付、出勤時刻、退勤時刻、休憩時間、実働時間、収益）
+   - 月別、期間指定でのエクスポート
+
+### UI/UX要件
+- **シンプルで直感的**: 迷わず使える
+- **スマホ片手操作**: 大きなタップ領域
+- **現在状態の明確化**: 色分けとアイコンで状態表示
+- **収益表示**: 大きなフォントで目立つ配置
+- **ダークモード対応**: 目に優しく
+
+### PWA要件
+- オフラインでも完全動作
+- スマホホーム画面への追加
+- アプリライクなナビゲーション
+- プッシュ通知（残業アラート等）
+
+## データベーススキーマ（Turso）
+```typescript
+// schema.ts (Drizzle)
+import { sqliteTable, text, integer, real } from 'drizzle-orm/sqlite-core';
+
+export const workRecords = sqliteTable('work_records', {
+  id: text('id').primaryKey(),
+  date: text('date').notNull(), // YYYY-MM-DD
+  clockIn: integer('clock_in', { mode: 'timestamp' }),
+  clockOut: integer('clock_out', { mode: 'timestamp' }),
+  breakStart: integer('break_start', { mode: 'timestamp' }),
+  breakEnd: integer('break_end', { mode: 'timestamp' }),
+  totalBreakMinutes: integer('total_break_minutes').default(0),
+  totalWorkMinutes: integer('total_work_minutes').default(0),
+  status: text('status').default('not_started'), // not_started, working, on_break, finished
+  earnings: real('earnings').default(0),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+
+export const settings = sqliteTable('settings', {
+  id: text('id').primaryKey().default('main'),
+  hourlyRate: real('hourly_rate').notNull().default(3000),
+  overtimeRate: real('overtime_rate').default(3750), // 1.25倍
+  targetHoursPerDay: integer('target_hours_per_day').default(480), // 8時間（分）
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull(),
+});
+```
+
+## ディレクトリ構造
+```
+src/
+├── app/
+│   ├── page.tsx              # メイン画面（タイムレコーダー）
+│   ├── history/
+│   │   └── page.tsx          # 履歴画面
+│   ├── settings/
+│   │   └── page.tsx          # 設定画面
+│   ├── api/
+│   │   ├── records/route.ts  # 勤務記録API
+│   │   └── export/route.ts   # CSV出力API
+│   ├── layout.tsx
+│   └── globals.css
+├── components/
+│   ├── TimeRecorder.tsx      # メインのタイムレコーダー
+│   ├── StatusDisplay.tsx     # 現在状態表示
+│   ├── EarningsDisplay.tsx   # 収益表示
+│   ├── StatsCards.tsx        # 統計カード群
+│   ├── HistoryList.tsx       # 履歴リスト
+│   └── Navigation.tsx        # ナビゲーション
+├── lib/
+│   ├── db.ts                 # Turso接続設定
+│   ├── schema.ts             # データベーススキーマ
+│   ├── timeCalculations.ts   # 時間計算ロジック
+│   ├── csvExport.ts          # CSV出力
+│   └── pwa.ts                # PWA関連
+└── types/
+    └── index.ts              # 型定義
+```
+
+## データ型定義
+```typescript
+interface WorkRecord {
+  id: string;
+  date: string; // YYYY-MM-DD
+  clockIn?: Date;
+  clockOut?: Date;
+  breakStart?: Date;
+  breakEnd?: Date;
+  totalBreakMinutes: number;
+  totalWorkMinutes: number;
+  status: 'not_started' | 'working' | 'on_break' | 'finished';
+  earnings: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface Settings {
+  hourlyRate: number;
+  overtimeRate: number;
+  targetHoursPerDay: number;
+}
+
+interface MonthlyStats {
+  totalHours: number;
+  totalEarnings: number;
+  workingDays: number;
+  averageHoursPerDay: number;
+}
+```
+
+## 実装のポイント
+1. **Tursoの活用**: ローカルファーストでオフライン対応
+2. **リアルタイム更新**: 状態変更時の即座な画面更新
+3. **エラーハンドリング**: ネットワークエラーやデータ同期エラーの適切な処理
+4. **パフォーマンス**: 大量データでも高速表示
+5. **セキュリティ**: クライアントサイドでの適切なデータ保護
+
+上記仕様でローカルファースト対応の副業エンジニア向け出退勤記録アプリを作成してください。Tursoの特性を活かした高速で信頼性の高いアプリをお願いします。
