@@ -1,104 +1,107 @@
 # Updated Design Guidelines for 副業エンジニア向け出退勤記録WebアプリMVP
 
-## Design Approach: Modern Material Design 3 System
-**Selected Framework:** Material Design 3 with refined color science and responsive desktop optimization
-**Rationale:** Maintains utility-focused efficiency while elevating professional appearance through sophisticated color harmonies and expanded device support.
+## Design Approach: Modern Material Design 3 with Approachable Color Science
+**Selected Framework:** Material Design 3 with vibrant, friendly color palette optimized for productivity tools
+**Rationale:** Maintains utility-focused efficiency while creating a welcoming, energetic atmosphere that reduces workplace stress and increases user engagement.
 
 ## Core Design Principles
-1. **Multi-Device Harmony:** Seamless experience from mobile thumb operation to desktop precision
-2. **Sophisticated Simplicity:** Refined aesthetics without sacrificing functional clarity
-3. **Professional Confidence:** Subdued elegance appropriate for workplace tools
-4. **Adaptive Intelligence:** Responsive layouts that enhance rather than compromise mobile-first design
+1. **Approachable Professionalism:** Bright, friendly colors that maintain workplace appropriateness
+2. **Energetic Simplicity:** Clean design with vibrant accents that motivate usage
+3. **Warm Efficiency:** Functional clarity enhanced by psychologically positive color choices
+4. **Multi-Device Optimism:** Consistent cheerful experience across all devices
 
 ## Color Palette
 
 ### Light Mode
-- **Primary:** 220 15% 35% (sophisticated steel blue - professional yet approachable)
-- **Success/Clock-in:** 145 25% 40% (muted sage green - calm reliability)
-- **Warning/Break:** 25 30% 50% (warm taupe - gentle attention)
-- **Error/Clock-out:** 5 25% 45% (subdued terracotta - serious but not alarming)
-- **Surface:** 0 0% 98% (pristine background)
-- **Surface-Variant:** 220 8% 94% (subtle container differentiation)
-- **On-Surface:** 0 0% 15% (comfortable reading contrast)
-- **Outline:** 220 10% 80% (soft structural elements)
+- **Primary:** 210 85% 50% (vibrant sky blue - energetic yet professional)
+- **Success/Clock-in:** 140 60% 45% (fresh green - positive action energy)
+- **Warning/Break:** 35 80% 55% (warm orange - friendly attention)
+- **Error/Clock-out:** 15 70% 55% (coral red - clear but approachable)
+- **Surface:** 0 0% 99% (crisp white foundation)
+- **Surface-Variant:** 210 15% 96% (soft blue-tinted containers)
+- **On-Surface:** 0 0% 20% (comfortable dark text)
+- **Outline:** 210 25% 85% (gentle blue borders)
+- **Accent:** 280 60% 65% (playful purple for highlights)
 
 ### Dark Mode
-- **Primary:** 220 20% 70% (lifted steel blue maintaining sophistication)
-- **Success:** 145 20% 65% (gentle sage maintaining recognition)
-- **Warning:** 25 25% 70% (softened warm tone)
-- **Error:** 5 20% 65% (muted but clear indication)
-- **Surface:** 220 8% 6% (rich dark foundation)
-- **Surface-Variant:** 220 12% 10% (elevated containers)
-- **On-Surface:** 0 0% 90% (comfortable light text)
-- **Outline:** 220 8% 25% (subtle dark mode borders)
+- **Primary:** 210 70% 65% (bright sky blue maintaining energy)
+- **Success:** 140 45% 60% (vibrant green for positive actions)
+- **Warning:** 35 65% 65% (warm amber for friendly alerts)
+- **Error:** 15 55% 65% (soft coral maintaining clarity)
+- **Surface:** 220 15% 8% (rich dark blue-tinted background)
+- **Surface-Variant:** 220 20% 12% (elevated containers with warmth)
+- **On-Surface:** 0 0% 92% (bright, comfortable text)
+- **Outline:** 210 30% 25% (defined dark borders)
+- **Accent:** 280 45% 70% (bright purple maintaining playfulness)
 
 ## Typography
 - **Primary Font:** Inter (Google Fonts CDN)
 - **Hierarchy:**
-  - Large actions: font-semibold text-lg (refined from bold)
-  - Status text: font-medium text-base (professional weight)
-  - Time displays: font-mono text-2xl (maintains precision)
-  - Earnings: font-semibold text-3xl (sophisticated emphasis)
+  - Large actions: font-semibold text-lg (confident and clear)
+  - Status text: font-medium text-base (approachable weight)
+  - Time displays: font-mono text-2xl (precise but friendly)
+  - Earnings: font-bold text-3xl (celebratory emphasis)
   - Body text: font-normal text-sm (comfortable reading)
 
 ## Layout System
-**Spacing Units:** Tailwind 3, 4, 6, 8, 12 (12px, 16px, 24px, 32px, 48px)
+**Spacing Units:** Tailwind 3, 4, 6, 8, 12 (maintaining proven rhythm)
 **Responsive Containers:**
-- Mobile: max-w-md mx-auto (original mobile optimization)
-- Tablet: max-w-2xl mx-auto px-6
-- Desktop: max-w-4xl mx-auto px-8 with sidebar navigation option
+- Mobile: max-w-md mx-auto with vibrant accent details
+- Tablet: max-w-2xl mx-auto px-6 with expanded colorful elements
+- Desktop: max-w-4xl mx-auto px-8 with cheerful sidebar options
 
 ## Component Library
 
 ### Primary Action Buttons
-- **Mobile:** Full width, 56px height (refined from 64px)
-- **Desktop:** Fixed width 280px, centered or left-aligned in cards
-- **States:** Sophisticated color applications with 8px border-radius
-- **Typography:** Medium weight (refined from bold), refined color contrast
-- **Interaction:** Subtle 2px shadow lift on hover (desktop), gentle scale on mobile
+- **Styling:** Vibrant primary color with 8px border-radius
+- **Mobile:** Full width, 56px height with energetic color fills
+- **Desktop:** Fixed width 280px with bright hover states
+- **Typography:** Semibold weight in high-contrast white text
+- **Accent Buttons:** Purple accent color for secondary actions
 
 ### Status Display Cards
-- **Design:** Elevated cards with 1px subtle borders in outline color
-- **Mobile:** Full width with 6px border-left accent in status color
-- **Desktop:** Grid layout with 4px border-top accent
-- **Typography:** Status text in primary color, time in on-surface
-- **Background:** Surface-variant for subtle elevation
+- **Design:** Clean cards with colorful 4px left borders (mobile) or top borders (desktop)
+- **Background:** Surface-variant with subtle color-tinted shadows
+- **Active Status:** Bright success green with gentle glow effect
+- **Break Status:** Warm orange creating friendly pause indication
+- **Clock-out:** Coral red maintaining approachable end-of-work feeling
 
 ### Time & Earnings Dashboard
-- **Layout:** Card-based containers with subtle shadows
-- **Mobile:** Stacked vertical cards
-- **Desktop:** Side-by-side grid with consistent heights
-- **Typography:** Monospace time in refined sizing, earnings with sophisticated primary color
+- **Cards:** Bright surface-variant backgrounds with colorful accent borders
+- **Earnings Display:** Bold typography in celebratory primary blue
+- **Time Counters:** Monospace in friendly on-surface color
+- **Progress Indicators:** Gradient fills using primary and accent colors
 
 ### Navigation
-- **Mobile:** Bottom tab bar with rounded corners and surface-variant background
-- **Desktop:** Top navigation bar or optional sidebar
-- **Icons:** Material Icons via CDN with outline color for inactive states
-- **Active states:** Primary color fill with subtle background highlight
+- **Mobile:** Bottom navigation with bright primary background and white icons
+- **Desktop:** Top bar or sidebar with colorful active states
+- **Icons:** Material Icons with vibrant primary fills for active states
+- **Background:** Surface-variant with subtle accent color highlights
 
 ### Data Tables
-- **Desktop Enhancement:** Full-featured tables with column sorting
-- **Mobile:** Maintained horizontal scroll with improved typography
-- **Row styling:** Alternating surface and surface-variant backgrounds
-- **Headers:** Medium weight typography in primary color
+- **Headers:** Primary color background with white text for energy
+- **Rows:** Alternating surface and surface-variant with colorful hover states
+- **Actions:** Bright button colors maintaining high contrast accessibility
+- **Borders:** Outline color creating clean, organized appearance
+
+## Professional Vibrancy Balance
+- **Workplace Appropriate:** Bright colors remain professional through proper contrast ratios
+- **Motivation Enhancement:** Energetic palette reduces monotony of time tracking
+- **Brand Warmth:** Friendly colors create positive association with productivity tools
+- **Stress Reduction:** Cheerful atmosphere makes work-related tasks feel less burdensome
 
 ## Responsive Enhancements
-- **Breakpoints:** Mobile-first with sm: (640px), md: (768px), lg: (1024px) considerations
-- **Desktop Advantages:** Larger touch targets become precision hover targets
-- **Multi-column layouts:** Sidebar information panels on larger screens
-- **Enhanced data visualization:** Charts and graphs viable on desktop widths
-
-## Professional Refinements
-- **Reduced visual intensity:** Sophisticated colors reduce eye strain during extended use
-- **Improved hierarchy:** Subtle color variations create clearer information architecture
-- **Enterprise readiness:** Color palette appropriate for corporate environments
-- **Brand flexibility:** Neutral foundation allows easy customization while maintaining sophistication
+- **Color Consistency:** Vibrant palette maintains impact across all screen sizes
+- **Touch Targets:** Bright colors improve button visibility and accessibility
+- **Information Hierarchy:** Color-coded status system enhances quick recognition
+- **Desktop Advantages:** Larger screens showcase full color palette effectively
 
 ## Animations
-**Refined approach:** Subtle, purposeful motion
-- Button interactions: 2px shadow transitions (desktop), gentle 0.98 scale (mobile)
-- Status changes: 200ms fade with slight scale for emphasis
-- Loading states: Elegant spinner in primary color with reduced opacity
-- Page transitions: Smooth 150ms fade between major sections
+**Energetic but Professional:**
+- Button interactions: Bright color transitions with gentle lift effects
+- Status changes: Colorful fade transitions with slight scale for celebration
+- Loading states: Playful spinner using primary color with accent highlights
+- Success feedback: Brief green glow effects for positive reinforcement
 
-This evolution maintains the utility-focused foundation while introducing sophisticated visual refinement suitable for professional environments across all device types.
+## Images
+**No hero images required** - This utility app focuses on functional interface elements rather than large imagery. Small decorative icons or illustrations could enhance empty states using the accent purple color palette, but are not essential for MVP functionality.

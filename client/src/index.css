@@ -14,13 +14,13 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  --background: 0 0% 98%;
+  --background: 0 0% 99%;
 
   --foreground: 0 0% 20%;
 
   --border: 0 0% 90%;
 
-  --card: 0 0% 96%;
+  --card: 210 15% 96%;
 
   --card-foreground: 0 0% 20%;
 
@@ -48,7 +48,7 @@
 
   --popover-border: 0 0% 88%;
 
-  --primary: 220 15% 35%;
+  --primary: 210 85% 50%;
 
   --primary-foreground: 0 0% 98%;
 
@@ -60,7 +60,7 @@
 
   --muted-foreground: 0 0% 45%;
 
-  --accent: 216 15% 88%;
+  --accent: 280 60% 65%;
 
   --accent-foreground: 0 0% 20%;
 
@@ -77,11 +77,12 @@
   --chart-5: 5 25% 45%;
 
   /* Custom color definitions for time tracking app */
-  --clock-in: 145 25% 40%;
-  --clock-out: 5 25% 45%;
-  --break-start: 25 30% 50%;
-  --break-end: 220 15% 35%;
-  --not-started: 220 10% 70%;
+  --clock-in: 140 60% 45%;
+  --clock-out: 15 70% 55%;
+  --break-start: 35 80% 55%;
+  --break-end: 210 85% 50%;
+  --not-started: 210 25% 75%;
+  --accent: 280 60% 65%;
 
   --font-sans: Open Sans, sans-serif;
   --font-serif: Georgia, serif;
@@ -139,13 +140,13 @@
   --elevate-1: rgba(255,255,255, .04);
   --elevate-2: rgba(255,255,255, .09);
 
-  --background: 0 0% 8%;
+  --background: 220 15% 8%;
 
   --foreground: 0 0% 90%;
 
   --border: 0 0% 18%;
 
-  --card: 0 0% 12%;
+  --card: 220 20% 12%;
 
   --card-foreground: 0 0% 90%;
 
@@ -173,7 +174,7 @@
 
   --popover-border: 0 0% 26%;
 
-  --primary: 220 20% 70%;
+  --primary: 210 70% 65%;
 
   --primary-foreground: 0 0% 8%;
 
@@ -185,7 +186,7 @@
 
   --muted-foreground: 0 0% 65%;
 
-  --accent: 216 15% 20%;
+  --accent: 280 45% 70%;
 
   --accent-foreground: 0 0% 90%;
 
@@ -202,11 +203,12 @@
   --chart-5: 5 20% 65%;
 
   /* Custom color definitions for time tracking app - Dark mode */
-  --clock-in: 145 20% 65%;
-  --clock-out: 5 20% 65%;
-  --break-start: 25 25% 70%;
-  --break-end: 220 20% 70%;
-  --not-started: 220 8% 50%;
+  --clock-in: 140 45% 60%;
+  --clock-out: 15 55% 65%;
+  --break-start: 35 65% 65%;
+  --break-end: 210 70% 65%;
+  --not-started: 210 30% 60%;
+  --accent: 280 45% 70%;
 
   --shadow-2xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
   --shadow-xs: 0px 2px 0px 0px hsl(0 0% 0% / 0.00);
