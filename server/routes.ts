@@ -3,26 +3,49 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertWorkRecordSchema, insertSettingsSchema } from "@shared/schema";
 
+// Helper function to parse time string and create full date
+const parseTimeWithDate = (timeStr: string, date: string): Date | null => {
+  if (!timeStr) return null;
+  
+  // If it's already a full ISO string, parse directly
+  if (timeStr.includes('T') || timeStr.includes('-')) {
+    const parsed = new Date(timeStr);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+  
+  // If it's just time (HH:MM), combine with date
+  const timeMatch = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+  if (timeMatch) {
+    const [, hours, minutes] = timeMatch;
+    const fullDateTime = `${date}T${hours.padStart(2, '0')}:${minutes}:00.000Z`;
+    const parsed = new Date(fullDateTime);
+    return isNaN(parsed.getTime()) ? null : parsed;
+  }
+  
+  return null;
+};
+
 // Helper function to calculate work minutes and earnings
 const calculateWorkMinutes = (clockIn?: Date, clockOut?: Date, breakMinutes: number = 0): number => {
-  if (!clockIn) return 0;
+  if (!clockIn || !clockOut) return 0;
   
-  const endTime = clockOut || new Date();
-  const totalMinutes = Math.floor((endTime.getTime() - clockIn.getTime()) / 1000 / 60);
+  const totalMinutes = Math.floor((clockOut.getTime() - clockIn.getTime()) / 1000 / 60);
   
   return Math.max(0, totalMinutes - breakMinutes);
 };
 
 const calculateEarnings = (workMinutes: number, hourlyRate: number, overtimeRate?: number, standardHours: number = 480): number => {
+  if (workMinutes <= 0) return 0;
+  
   if (workMinutes <= standardHours) {
-    return (workMinutes / 60) * hourlyRate;
+    return Math.round((workMinutes / 60) * hourlyRate);
   }
   
   const regularEarnings = (standardHours / 60) * hourlyRate;
   const overtimeMinutes = workMinutes - standardHours;
   const overtimeEarnings = (overtimeMinutes / 60) * (overtimeRate || hourlyRate * 1.25);
   
-  return regularEarnings + overtimeEarnings;
+  return Math.round(regularEarnings + overtimeEarnings);
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -36,13 +59,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/records/:date", async (req, res) => {
+  app.get("/api/records/date/:date", async (req, res) => {
     try {
       const { date } = req.params;
       const records = await storage.getWorkRecordsByDate(date);
       res.json(records);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch work records for date" });
+    }
+  });
+
+  app.get("/api/records/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const record = await storage.getWorkRecord(id);
+      if (!record) {
+        return res.status(404).json({ error: "Work record not found" });
+      }
+      res.json(record);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch work record" });
     }
   });
 
@@ -63,8 +99,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log(`PATCH /api/records/${id} - Request body:`, JSON.stringify(updates, null, 2));
       
-      // If clockIn and clockOut are provided, recalculate work minutes and earnings
-      if (updates.clockIn || updates.clockOut) {
+      // Check if any time-related fields are being updated
+      const needsRecalculation = updates.clockIn || updates.clockOut || updates.breakStart || updates.breakEnd || updates.totalBreakMinutes !== undefined;
+      
+      if (needsRecalculation) {
         console.log('Recalculating work minutes and earnings...');
         const existing = await storage.getWorkRecord(id);
         if (!existing) {
@@ -77,32 +115,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const settings = await storage.getSettings();
         console.log('Settings:', JSON.stringify(settings, null, 2));
         
-        // Use updated values or fall back to existing values
-        const clockIn = updates.clockIn ? new Date(updates.clockIn) : existing.clockIn;
-        const clockOut = updates.clockOut ? new Date(updates.clockOut) : existing.clockOut;
-        const totalBreakMinutes = updates.totalBreakMinutes !== undefined ? updates.totalBreakMinutes : existing.totalBreakMinutes;
+        // Parse time values properly
+        let clockIn: Date | null = null;
+        let clockOut: Date | null = null;
         
-        console.log('Time values:', { clockIn, clockOut, totalBreakMinutes });
+        if (updates.clockIn) {
+          clockIn = parseTimeWithDate(updates.clockIn, existing.date);
+          if (!clockIn) {
+            return res.status(400).json({ error: "Invalid clockIn time format" });
+          }
+        } else if (existing.clockIn) {
+          clockIn = existing.clockIn;
+        }
         
-        // Calculate total break minutes from break times if provided
-        let calculatedBreakMinutes = totalBreakMinutes;
+        if (updates.clockOut) {
+          clockOut = parseTimeWithDate(updates.clockOut, existing.date);
+          if (!clockOut) {
+            return res.status(400).json({ error: "Invalid clockOut time format" });
+          }
+        } else if (existing.clockOut) {
+          clockOut = existing.clockOut;
+        }
+        
+        console.log('Parsed time values:', { clockIn, clockOut });
+        
+        // Calculate total break minutes
+        let calculatedBreakMinutes = existing.totalBreakMinutes;
+        
         if (updates.breakStart && updates.breakEnd) {
-          const breakStart = new Date(updates.breakStart);
-          const breakEnd = new Date(updates.breakEnd);
+          const breakStart = parseTimeWithDate(updates.breakStart, existing.date);
+          const breakEnd = parseTimeWithDate(updates.breakEnd, existing.date);
+          
+          if (!breakStart || !breakEnd) {
+            return res.status(400).json({ error: "Invalid break time format" });
+          }
+          
           calculatedBreakMinutes = Math.floor((breakEnd.getTime() - breakStart.getTime()) / 1000 / 60);
           console.log('Break calculation:', { breakStart, breakEnd, calculatedBreakMinutes });
+        } else if (updates.totalBreakMinutes !== undefined) {
+          calculatedBreakMinutes = updates.totalBreakMinutes;
         }
         
         // Calculate work minutes and earnings
-        const totalWorkMinutes = calculateWorkMinutes(clockIn, clockOut, calculatedBreakMinutes);
+        const totalWorkMinutes = calculateWorkMinutes(clockIn || undefined, clockOut || undefined, calculatedBreakMinutes);
         const earnings = calculateEarnings(totalWorkMinutes, settings.hourlyRate, settings.overtimeRate);
         
-        console.log('Calculations:', { totalWorkMinutes, earnings, calculatedBreakMinutes });
+        console.log('Final calculations:', { totalWorkMinutes, earnings, calculatedBreakMinutes });
         
         // Add calculated values to updates
         updates.totalBreakMinutes = calculatedBreakMinutes;
         updates.totalWorkMinutes = totalWorkMinutes;
         updates.earnings = earnings;
+        
+        // Update the parsed date objects
+        if (clockIn) updates.clockIn = clockIn;
+        if (clockOut) updates.clockOut = clockOut;
         
         console.log('Final updates:', JSON.stringify(updates, null, 2));
       }

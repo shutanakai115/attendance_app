@@ -23,7 +23,7 @@ export const useWorkTracker = () => {
     queryFn: async () => {
       try {
         // Try API first, fallback to localStorage
-        const response = await fetch(`/api/records/${todayDate}`);
+        const response = await fetch(`/api/records/date/${todayDate}`);
         if (response.ok) {
           const records = await response.json();
           // Convert date strings back to Date objects
